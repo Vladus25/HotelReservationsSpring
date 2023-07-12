@@ -1,17 +1,51 @@
-<mat-form-field class="example-full-width">
-  <mat-label>Choose a start date</mat-label>
-  <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="startDatePicker" [(ngModel)]="startDate">
-  <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-  <mat-datepicker #startDatePicker (selectedChanged)="selectStartDate($event)"></mat-datepicker>
-</mat-form-field>
-
-<mat-form-field class="example-full-width">
-  <mat-label>Choose an end date</mat-label>
-  <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="endDatePicker" [(ngModel)]="endDate">
-  <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-  <mat-datepicker #endDatePicker (selectedChanged)="selectEndDate($event)"></mat-datepicker>
-</mat-form-field>
-
-<div class="error-message" *ngIf="endDate && isRangeUnavailable(startDate, endDate)">
-  Il range di date selezionato contiene date non disponibili. Seleziona un altro range.
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="text-center">Prenota Hotel</h2>
+      <form (ngSubmit)="addPrenotazione()" #prenotazioneForm="ngForm">
+        <div class="mb-3">
+          <label for="dataInizio" class="form-label">Choose a start date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" [matDatepickerFilter]="myFilter" [matDatepicker]="startDatePicker"  [(ngModel)]="prenotazione.dataInizio" name="dataInizio" required (click)="startDatePicker.open()">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker (selectedChanged)="selectStartDate($event)"></mat-datepicker>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="dataFine" class="form-label">Choose an end date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" [matDatepickerFilter]="myFilter" [matDatepicker]="endDatePicker" [(ngModel)]="prenotazione.dataFine" name="dataFine" required (click)="endDatePicker.open()">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker (selectedChanged)="selectEndDate($event)"></mat-datepicker>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="prenotazione.dataFine && isRangeUnavailable(prenotazione.dataInizio, prenotazione.dataFine)">
+          Il range di date selezionato contiene date non disponibili. Seleziona un altro range.
+        </div>
+        <div class="mb-3">
+          <label for="stanza" class="form-label">Stanza</label>
+          <select class="form-select" [(ngModel)]="prenotazione.stanza.id" name="stanza" required>
+            <option *ngFor="let s of stanze" [value]="s.id">
+              Stanza: {{ s.numeroStanza }} |
+              Persone: {{ s.nPosti }} |
+              Prezzo: {{ s.prezzo }} |
+            </option>
+          </select>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary" [disabled]="!prenotazioneForm.valid">Aggiungi</button>
+        </div>
+      </form>
+      <div style="margin-top: 10px;">
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+

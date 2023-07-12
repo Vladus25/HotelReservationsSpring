@@ -27,8 +27,8 @@ public class PrenotazioneController {
     private PrenotazioneService serv;
 
     @GetMapping("/all")
-    public List<PrenotazioneEntity> getGiochi(){
-        return serv.getPrenotazioni();
+    public List<PrenotazioneEntity> getAllPrenotazioni(){
+        return serv.getAllPrenotazioni();
     }
     
     @PostMapping("/add")

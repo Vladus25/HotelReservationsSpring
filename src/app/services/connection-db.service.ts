@@ -15,6 +15,18 @@ export class ConnectionDBService {
     return this.http.get(`${this.baseUrl}/prenotazioni/all`);
   }
 
+  getAllStanze(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/stanze/all`);
+  }
+
+  getDataStart(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/prenotazioni/date-inizio`);
+  }
+
+  getDataEnd(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/prenotazioni/date-fine`);
+  }
+
   addPrenotazione(prenotazione: any):Observable<any> {
     return this.http.post(`${this.baseUrl}/prenotazioni/add`, prenotazione);
   }
@@ -31,11 +43,4 @@ export class ConnectionDBService {
     );
   }
 
-  getDataStart(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/prenotazioni/date-inizio`);
-  }
-
-  getDataEnd(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/prenotazioni/date-fine`);
-  }
 }

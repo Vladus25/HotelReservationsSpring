@@ -16,7 +16,7 @@ public class PrenotazioneService {
 	@Autowired
     private PrenotazioneRepository repo;
 
-    public List<PrenotazioneEntity> getPrenotazioni(){
+    public List<PrenotazioneEntity> getAllPrenotazioni(){
         return repo.findAll();
     }
     

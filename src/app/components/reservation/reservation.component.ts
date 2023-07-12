@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConnectionDBService } from 'src/app/services/connection-db.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 
 @Component({
@@ -9,26 +11,59 @@ import { ConnectionDBService } from 'src/app/services/connection-db.service';
 })
 export class ReservationComponent {
   unavailableDates: string[] = [];
+
   startDate: Date | null = null;
   endDate: Date | null = null;
+  startDates: Date[] = [];
+  endDates: Date[] = [];
 
-  startDates: Date [] = [];
-  endDates: Date [] = [];
+  prenotazioni: any;
+  stanze: any;
+  user!: number;
 
-  constructor(private connectionDBService: ConnectionDBService) {}
+  prenotazione: any = {
+    dataFine: '',
+    dataInizio: '',
+    stanza: { id: null },
+    user: { id: null },
+  };
+
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
+  constructor(private http: ConnectionDBService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
     this.getDataStart();
     this.getDataEnd();
+    this.getAllPrenotazioni();
+    this.getAllStanze();
 
     setTimeout(() => {
       this.getUnavailableDates(this.startDates, this.endDates);
       console.log(this.unavailableDates);
-    }, 500);
+    }, 100);
+
+    if (this.tokenStorage.getToken()) {
+      this.prenotazione.user.id = this.tokenStorage.getUser().id;
+      console.log(this.user)
+    }
+  }
+
+  getAllPrenotazioni(): void {
+    this.http.getAllPrenotazioni().subscribe(data => {
+      this.prenotazioni = data;
+    });
+  }
+
+  getAllStanze() {
+    this.http.getAllStanze().subscribe(data => {
+      this.stanze = data;
+    });
   }
 
   getDataStart(): void {
-    this.connectionDBService.getDataStart().subscribe(
+    this.http.getDataStart().subscribe(
       (response: Date[]) => {
         this.startDates = response;
         console.log(this.startDates);
@@ -40,7 +75,7 @@ export class ReservationComponent {
   }
 
   getDataEnd(): void {
-    this.connectionDBService.getDataEnd().subscribe(
+    this.http.getDataEnd().subscribe(
       (response: Date[]) => {
         this.endDates = response;
         console.log(this.endDates);
@@ -121,5 +156,19 @@ export class ReservationComponent {
 
     return false; // Tutte le date nel range sono disponibili
   };
+
+  addPrenotazione() {
+    this.http.addPrenotazione(this.prenotazione).subscribe(
+      (result: any) => {
+        this.successMessage = 'Prenotazione aggiunta con successo.';
+        setTimeout(() => {
+          this.router.navigate(['/Home']);
+        }, 1500);
+      },
+      (error: any) => {
+        this.errorMessage = 'Si è verificato un errore durante l\'aggiunta della prenotazione.';
+      }
+    );
+  }
 
 }
