@@ -1,5 +1,6 @@
 package com.Controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,14 @@ public class PrenotazioneController {
         return serv.modificaPrenotazione(prenotazione);
     }
     
-    @GetMapping("/allData")
-	public List<String> getAllPrenotazioniDate() {
-		return serv.getAllPrenotazioniDate();
-	}
+    @GetMapping("/date-inizio")
+    public List<Date> getDateInizio() {
+        return serv.getAllDateInizio();
+    }
+    
+    @GetMapping("/date-fine")
+    public List<Date> getDateFine() {
+        return serv.getAllDateFine();
+    }
+    
 }

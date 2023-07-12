@@ -13,45 +13,80 @@ public class PrenotazioneEntity {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity user;
+    
+    @OneToOne
+    @JoinColumn(name = "id_stanza")
+    private StanzaEntity stanza;
 
     @Temporal(TemporalType.DATE)
-    private Date data;
+    @Column(name = "data_inizio")
+    private Date dataInizio;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "data_fine")
+    private Date dataFine;
 
 	public Integer getId() {
 		return id;
 	}
 
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 
 	public UserEntity getUser() {
 		return user;
 	}
 
+
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 
-	public Date getData() {
-		return data;
+
+	public StanzaEntity getStanza() {
+		return stanza;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
+
+	public void setStanza(StanzaEntity stanza) {
+		this.stanza = stanza;
 	}
 
-	public PrenotazioneEntity(Integer id, UserEntity user, Date data) {
+
+	public Date getDataInizio() {
+		return dataInizio;
+	}
+
+
+	public void setDataInizio(Date dataInizio) {
+		this.dataInizio = dataInizio;
+	}
+
+
+	public Date getDataFine() {
+		return dataFine;
+	}
+
+
+	public void setDataFine(Date dataFine) {
+		this.dataFine = dataFine;
+	}
+
+	public PrenotazioneEntity(Integer id, UserEntity user, StanzaEntity stanza, Date dataInizio, Date dataFine) {
 		super();
 		this.id = id;
 		this.user = user;
-		this.data = data;
+		this.stanza = stanza;
+		this.dataInizio = dataInizio;
+		this.dataFine = dataFine;
 	}
+
 
 	public PrenotazioneEntity() {
 		super();
 	}
-
-    
 
 }

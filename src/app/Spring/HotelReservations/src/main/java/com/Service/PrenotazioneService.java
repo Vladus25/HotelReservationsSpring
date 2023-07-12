@@ -1,5 +1,6 @@
 package com.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,12 +32,19 @@ public class PrenotazioneService {
         return repo.save(prenotazione);
     }
     
-    public List<String> getAllPrenotazioniDate() {
-		List<PrenotazioneEntity> prenotazioni = repo.findAll();
-		return prenotazioni.stream()
-			.map(PrenotazioneEntity::getData)
-			.map(date -> date.toString()) // Converte la data in formato stringa se necessario
-			.collect(Collectors.toList());
-	}
+    public List<Date> getAllDateInizio() {
+        List<PrenotazioneEntity> prenotazioni = repo.findAll();
+        return prenotazioni.stream()
+            .map(PrenotazioneEntity::getDataInizio)
+            .collect(Collectors.toList());
+    }
+
+    public List<Date> getAllDateFine() {
+        List<PrenotazioneEntity> prenotazioni = repo.findAll();
+        return prenotazioni.stream()
+            .map(PrenotazioneEntity::getDataFine)
+            .collect(Collectors.toList());
+    }
+
 }
 

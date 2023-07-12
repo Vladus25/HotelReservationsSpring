@@ -31,7 +31,11 @@ export class ConnectionDBService {
     );
   }
 
-  getAllPrenotazioniDate(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/prenotazioni/allData`);
+  getDataStart(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/prenotazioni/date-inizio`);
+  }
+
+  getDataEnd(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/prenotazioni/date-fine`);
   }
 }

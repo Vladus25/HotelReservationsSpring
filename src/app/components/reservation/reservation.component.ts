@@ -12,17 +12,26 @@ export class ReservationComponent {
   startDate: Date | null = null;
   endDate: Date | null = null;
 
+  startDates: Date [] = [];
+  endDates: Date [] = [];
+
   constructor(private connectionDBService: ConnectionDBService) {}
 
   ngOnInit(): void {
-    this.getUnavailableDates();
+    this.getDataStart();
+    this.getDataEnd();
+
+    setTimeout(() => {
+      this.getUnavailableDates(this.startDates, this.endDates);
+      console.log(this.unavailableDates);
+    }, 500);
   }
 
-  getUnavailableDates(): void {
-    this.connectionDBService.getAllPrenotazioniDate().subscribe(
-      (response: string[]) => {
-        this.unavailableDates = response;
-        console.log(this.unavailableDates)
+  getDataStart(): void {
+    this.connectionDBService.getDataStart().subscribe(
+      (response: Date[]) => {
+        this.startDates = response;
+        console.log(this.startDates);
       },
       (error: any) => {
         console.log(error);
@@ -30,9 +39,47 @@ export class ReservationComponent {
     );
   }
 
+  getDataEnd(): void {
+    this.connectionDBService.getDataEnd().subscribe(
+      (response: Date[]) => {
+        this.endDates = response;
+        console.log(this.endDates);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  getUnavailableDates(startDates: Date[], endDates: Date[]): string[] {
+    const dateRange: string[] = [];
+
+    for (let i = 0; i < startDates.length; i++) {
+      const startDate = new Date(startDates[i]);
+      const endDate = new Date(endDates[i]);
+
+      const currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        const dateString = currentDate.toISOString().substring(0, 10);
+        dateRange.push(dateString);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    }
+
+    return this.unavailableDates = dateRange.map(date => {
+      const currentDate = new Date(date);
+      currentDate.setDate(currentDate.getDate() - 1);
+
+      return currentDate.toISOString().substring(0, 10);
+    });
+
+  }
   myFilter = (d: Date | null): boolean => {
     if (d) {
       const currentDate = new Date();
+      // Include il giorno corrente
+      currentDate.setDate(currentDate.getDate() - 1);
       const selectedDate = new Date(d);
       const dateWithOffset = new Date(selectedDate.getTime() + (selectedDate.getTimezoneOffset() * 60000));
 
@@ -48,6 +95,8 @@ export class ReservationComponent {
   };
 
 
+
+
   selectStartDate(event: any): void {
     const date = new Date(event.value);
     this.startDate = date;
@@ -58,11 +107,6 @@ export class ReservationComponent {
     this.endDate = date;
   }
 
-  resetDates(): void {
-    this.startDate = null;
-    this.endDate = null;
-  }
-
   isRangeUnavailable = (start: Date | null, end: Date | null): boolean => {
     if (!start || !end) {
       return false; // Se manca una delle date, considera il range come disponibile
@@ -71,16 +115,14 @@ export class ReservationComponent {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    while (startDate <= endDate) {
-      const dateString = startDate.toISOString().substring(0, 10);
-      if (this.unavailableDates.includes(dateString)) {
+    while (startDate < endDate) {
+      if (!this.myFilter(startDate)) {
         return true; // Il range contiene una data non disponibile
       }
-      startDate.setDate(startDate.getDate() + 1); // Serve per fixare il bug di scalo un giorno
+      startDate.setDate(startDate.getDate() + 1);
     }
 
     return false; // Tutte le date nel range sono disponibili
   };
-
 
 }
