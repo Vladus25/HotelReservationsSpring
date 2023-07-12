@@ -23,19 +23,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
-export const MY_FORMATS = {
-  parse: {
-      dateInput: 'LL'
-  },
-  display: {
-      dateInput: 'YYYY-MM-DD',
-      monthYearLabel: 'YYYY',
-      dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'YYYY'
-  }
-};
-
-
 @NgModule({
   declarations: [
     AppComponent,

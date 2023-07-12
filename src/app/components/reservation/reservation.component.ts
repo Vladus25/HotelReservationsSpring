@@ -51,7 +51,6 @@ export class ReservationComponent {
     );
   }
 
-
   getUnavailableDates(startDates: Date[], endDates: Date[]): string[] {
     const dateRange: string[] = [];
 
@@ -75,6 +74,7 @@ export class ReservationComponent {
     });
 
   }
+
   myFilter = (d: Date | null): boolean => {
     if (d) {
       const currentDate = new Date();
@@ -93,9 +93,6 @@ export class ReservationComponent {
     }
     return true;
   };
-
-
-
 
   selectStartDate(event: any): void {
     const date = new Date(event.value);
